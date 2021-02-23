@@ -6,8 +6,8 @@ console.log(`Your principal is $${Intl.NumberFormat().format(principal)}`);
 
 console.log("What's the APR of your loan? (enter 5 for 5%)");
 let annualInterestRate = validateNumber(Number(readline.question()));
-let x = 1 + (annualInterestRate/100);
-let y = (x ** (1/12));
+let x = 1 + (annualInterestRate / 100);
+let y = (x ** (1 / 12));
 let z = y - 1;
 let monthlyInterestRate = z;
 console.log(`Your Annual Interest Rate is ${annualInterestRate}%`);
@@ -26,6 +26,7 @@ function validateNumber(num) {
   return num;
 }
 
-let monthlyPayment = principal * (monthlyInterestRate / (1 - Math.pow((1 + monthlyInterestRate), (-loanDuration))));
+let monthlyPayment = principal * (monthlyInterestRate /
+  (1 - Math.pow((1 + monthlyInterestRate), (-loanDuration))));
 
 console.log(`Your monthly payment is $${Intl.NumberFormat().format(monthlyPayment)}`);
