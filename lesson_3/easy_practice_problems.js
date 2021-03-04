@@ -126,4 +126,39 @@
 //
 // Object.entries(flintstones).filter(pair => pair[0] === "Barney").shift();
 
-study syntax::statement1.split('').filter(char => char === 't').length;
+// study syntax::statement1.split('').filter(char => char === 't').length;
+
+// Easy 3
+// Question 1
+// let numbers = [1, 2, 3, 4];
+// while (numbers.length) {
+//   console.log(numbers.pop());
+// }
+// console.log(numbers);
+
+// let numbers = [1, 2, 3, 4];
+// numbers.splice(0, numbers.length);
+// console.log(numbers);
+
+// let numbers = [1, 2, 3, 4];
+// // missed this one! but nailed others. numbers.length = 0;
+// console.log(numbers);
+
+// Question 5
+
+// function isColorValid(color) {
+//   if (color === "blue" || color === "green") {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// }
+// // solution 1
+// function isColorValid(color) {
+//   return (color === "blue" || color === "green");
+// }
+//
+// // solution 2
+// function isColorValid(color) {
+//   return ["blue", "green"].includes(color);
+// }
