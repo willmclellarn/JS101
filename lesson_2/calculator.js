@@ -1,7 +1,6 @@
 // import the readline library
 const readline = require('readline-sync');
 
-
 // Ask the user for the first number.
 // Ask the user for the second number.
 // Ask the user for an operation to perform.
@@ -9,11 +8,16 @@ const readline = require('readline-sync');
 // Print the result to the terminal.
 
 // opening message
-console.log('Welcome to Calculator!');
+// console.log('Welcome to Calculator!');
 
 // ask for first number
-console.log("What's the first number?");
-// get first number from user and save it to a variable
+function prompt(message) {
+  console.log(`=> ${message}`);
+}
+
+prompt('Welcome to Calculator!');
+
+prompt("What's the first number?");
 let number1 = readline.question();
 
 console.log("What's the second number?");
