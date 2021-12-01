@@ -7,6 +7,11 @@
 //    - repeat until total >= 17
 // 6. If dealer busts, player wins.
 // 7. Compare cards and declare winner.
+const readline = require("readline-sync");
+
+function prompt(msg) {
+  console.log(`=> ${msg}`);
+}
 
 function initializeDeck() {
   let deck = [];
@@ -31,8 +36,16 @@ function initialDeal(deck, playersCards, dealersCards) {
     currentCard = deck.splice(randomIndex, 1)[0];
     dealersCards.push(currentCard);
   }
+  console.log(playersCards);
+}
+
+function dealCard(deck, hand) {
+  randomIndex = Math.floor(Math.random() * deck.length);
+  currentCard = deck.splice(randomIndex, 1)[0];
+  hand.push(currentCard);
 }
 function displayPlayerCards(playersCards) {
+  // console.clear();
   let displayString = "Player has: ";
   // console.log("Player has: ");
   playersCards.forEach((card, index) => {
@@ -50,12 +63,47 @@ function displayDealersCards(dealersCards) {
   }
 }
 
+function playerTurn(deck, playersCards) {
+  console.log("time for the playa to play");
+  console.log(`player, your current score is ${calculateScore(playersCards)}`);
+  while (true) {
+    prompt("Would you like to hit or stay?");
+    answer = readline.question().trim();
+    if (answer === "stay" || calculateScore(playersCards) > 21) break;
+    dealCard(deck, playersCards);
+    displayPlayerCards(playersCards);
+  }
+}
+
 function calculateScore(cards) {
-  return 12;
+  let score = 0;
+  let royals = ["Jack", "Queen", "King"];
+  let numAces = 0;
+  cards.forEach((card) => {
+    if (typeof card[0] === "number") {
+      score += card[0];
+    } else if (royals.includes(card[0])) {
+      score += 10;
+    } else if (card[0] === "Ace") {
+      numAces += 1;
+      score += 11;
+    }
+  });
+  if (score > 21 && numAces > 0) {
+    for (let i = 0; i < numAces; i++) {
+      score -= 10;
+      if (score <= 21) {
+        break;
+      }
+    }
+    // try to convert aces from being worth 11 to being worth 1, one by one
+    // see if that brings the total equal or under 21
+  }
+  // console.log(`score is ${score}`);
+  return score;
 }
 
 let deck = initializeDeck();
-console.log(deck);
 let playersCards = [];
 let dealersCards = [];
 initialDeal(deck, playersCards, dealersCards);
@@ -63,3 +111,14 @@ initialDeal(deck, playersCards, dealersCards);
 displayDealersCards(dealersCards);
 console.log("");
 displayPlayerCards(playersCards);
+console.log("");
+playerTurn(deck, playersCards);
+
+// let dummyCards = [
+//   ["Queen", "Clubs"],
+//   [8, "Diamonds"],
+//   [8, "Diamonds"],
+//   ["Ace", "Diamonds"],
+// ];
+
+// calculateScore(dummyCards);
