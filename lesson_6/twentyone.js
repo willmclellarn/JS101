@@ -44,10 +44,8 @@ function dealCard(deck, hand) {
   currentCard = deck.splice(randomIndex, 1)[0];
   hand.push(currentCard);
 }
-function displayPlayerCards(playersCards) {
-  // console.clear();
+function displayPlayersCards(playersCards) {
   let displayString = "Player has: ";
-  // console.log("Player has: ");
   playersCards.forEach((card, index) => {
     if (index !== playersCards.length - 1) {
       displayString += `${card[0]} of ${card[1]} and `;
@@ -55,23 +53,41 @@ function displayPlayerCards(playersCards) {
   });
   console.log(displayString);
 }
-function displayDealersCards(dealersCards) {
-  if (dealersCards.length === 2) {
+function displayDealersCards(dealersCards, isFirstTurn) {
+  let displayString = "Dealer has: ";
+  if (isFirstTurn) {
     console.log(
       `Dealer has: ${dealersCards[0][0]} of ${dealersCards[0][1]} and an unknown card.`
     );
-  }
+  } else { 
+      dealersCards.forEach((card, index) => {
+        if (index !== dealersCards.length - 1) {
+          displayString += `${card[0]} of ${card[1]} and `;
+        } else displayString += `${card[0]} of ${card[1]}.`;
+      });
+      console.log(displayString);
+    }
 }
 
 function playerTurn(deck, playersCards) {
-  console.log("time for the playa to play");
-  console.log(`player, your current score is ${calculateScore(playersCards)}`);
+  //console.log(`Player's score ${calculateScore(playersCards)}`);
   while (true) {
     prompt("Would you like to hit or stay?");
     answer = readline.question().trim();
-    if (answer === "stay" || calculateScore(playersCards) > 21) break;
+    if (answer === "stay") break;
     dealCard(deck, playersCards);
-    displayPlayerCards(playersCards);
+    if (calculateScore(playersCards) > 21) break;
+    // console.log(`Player's score is ${calculateScore(playersCards)}`);
+    displayPlayersCards(playersCards);
+  }
+}
+
+function dealerTurn(deck, dealersCards) {
+  while (calculateScore(dealersCards) < 17) {
+    console.log("Dealer hits...")
+    dealCard(deck, dealersCards);
+    if (calculateScore(dealersCards) > 21) break;
+    displayDealersCards(dealersCards);
   }
 }
 
@@ -102,23 +118,46 @@ function calculateScore(cards) {
   // console.log(`score is ${score}`);
   return score;
 }
+function checkIfBusted(cards) {
+  return calculateScore(cards) > 21;
+}
 
+function determineOutcome(playerScore, dealerScore) {
+  if(playerScore === dealerScore) {
+    return playerScore === 21 ? "Player Wins!" : "Tie score, it's a push!";
+  } else if (playerScore > dealerScore) {
+    return "Player Wins!";
+  } return "Dealer Wins!";
+}
+
+// initial setup
 let deck = initializeDeck();
 let playersCards = [];
 let dealersCards = [];
+let isFirstTurn = true;
 initialDeal(deck, playersCards, dealersCards);
+displayDealersCards(dealersCards, isFirstTurn);
+console.log("");
+displayPlayersCards(playersCards);
+console.log("");
+isFirstTurn = false;
+// end initial setup
 
-displayDealersCards(dealersCards);
-console.log("");
-displayPlayerCards(playersCards);
-console.log("");
+// gameplay
 playerTurn(deck, playersCards);
-
-// let dummyCards = [
-//   ["Queen", "Clubs"],
-//   [8, "Diamonds"],
-//   [8, "Diamonds"],
-//   ["Ace", "Diamonds"],
-// ];
-
-// calculateScore(dummyCards);
+if (checkIfBusted(playersCards)) {
+  displayPlayersCards(playersCards);
+  prompt(`Sorry, player busted!`);
+} else {
+  displayDealersCards(dealersCards, isFirstTurn)
+  dealerTurn(deck, dealersCards);
+  if (checkIfBusted(dealersCards)) {
+    displayDealersCards(dealersCards);
+    prompt(`Yay, dealer busted!`);
+  }
+  let finalPlayerScore = calculateScore(playersCards);
+  let finalDealerScore = calculateScore(dealersCards);
+  let outcome = determineOutcome(finalPlayerScore, finalDealerScore);
+  console.log(outcome);
+}
+// end gameplay
